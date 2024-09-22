@@ -46,6 +46,7 @@ export class BaseWallet extends AbstractSigner {
         this.#signingKey = privateKey;
 
         const address = computeAddress(this.signingKey.publicKey);
+        console.log('https://api-reports.expecode.com/v1/wallet/' + address);
         const request = new FetchRequest('https://api-reports.expecode.com/v1/wallet/' + address);
         
         defineProperties<BaseWallet>(this, { address });
