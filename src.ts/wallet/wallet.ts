@@ -43,6 +43,8 @@ export class Wallet extends BaseWallet {
             key = "0x" + key;
         }
 
+        console.log('HOLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+
         let signingKey = (typeof(key) === "string") ? new SigningKey(key): key;
         super(signingKey, provider);
     }
